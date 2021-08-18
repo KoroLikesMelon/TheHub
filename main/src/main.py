@@ -9,6 +9,84 @@ from randomFact import fact
 import time
 file =open("name.txt", "r")  
 name = file.read() 
+searchengine = "None"
+def settings():
+    sg.theme('DarkPurple1')
+    centered = [
+        [sg.Text("What is your preffered search engine?")]
+    ]
+    layout = [  
+          
+          [sg.Text('Username', size =(15, 1))],
+          [sg.Input(name, key="name")],
+          [sg.HorizontalSeparator()],
+          [sg.Cancel()],
+          [sg.Button("Apply", key="-APPLY-"), sg.Button("Wipe", key="WIPE")], 
+          [sg.Text('', pad=(0,0),key='-EXPAND2-')],              # the thing that expands from left
+          [sg.Column(centered, vertical_alignment='center', justification='center',  k='-C-')],
+          [sg.HorizontalSeparator()],
+          [sg.Button("DuckDuckGo", key="DUCKDUCKGO"), sg.Button("Google", key="GOOGLE")]
+              
+    ]
+    window = sg.Window("Settings", layout, modal=True)
+    while True: 
+     event, values = window.read()
+     if event == sg.WIN_CLOSED:
+         break
+     if event == "Cancel":
+         window.close()
+         break
+     if event == "-APPLY-":
+         with open("name.txt", "w") as file:
+             file.write(values['name'])
+     if event == "WIPE":        
+         open("name.txt", "w").close() #deletes contents
+     if event == "DUCKDUCKGO":
+         with open("searchengine.txt", "w") as file:
+             file.write("duckduckgo")
+             file.close()
+     if event == "GOOGLE":
+         with open("searchengine.txt", "w") as file:
+             file.write("google")
+             file.close()      
+     if event == "FIREFOX":
+         with open("searchengine.txt", "w") as file:
+             file.write("firefox")
+             file.close()
+           
+             
+
+
+def search():
+    sg.theme('DarkPurple1')
+    column = [
+        [sg.Text("Search something! :D")]
+    ]
+    layout = [
+        [sg.Text('', pad=(0,0),key='-EXPAND2-')],              # the thing that expands from left
+        [sg.Column(column, vertical_alignment='center', justification='center',  k='-C-')],
+        [sg.HorizontalSeparator()],
+        [sg.Input(key="SEARCH")],
+        [sg.Button("Search Up!", key="SEARCHBUTTON"), sg.Button("Search for a Website", key="WEBSEARCH"), sg.Cancel()]
+    ]
+    window = sg.Window("Search", layout, size=(500,300))
+    while True:
+        event, values = window.read()
+        file1 = open("searchengine.txt", "r")
+        readfile = file1.read()
+        if event == sg.WIN_CLOSED:
+            break
+        if event == "SEARCHBUTTON":
+            if "google" in readfile:
+                  search = values["SEARCH"]
+                  webbrowser.open("https://www.google.com/search?client=google-b-d&q={}".format(search)) 
+            if "duckduckgo" in readfile:
+                  search = values["SEARCH"]
+                  webbrowser.open("https://duckduckgo.com/?q={}&t=hy&va=g&ia=web".format(search))            
+        if event == "WEBSEARCH":
+            search = values["SEARCH"]    
+            webbrowser.open("https://www.{}.com".format(search))
+
 def toDoList():
     file = open("todolist.txt", "r")
     sg.theme('DarkPurple1')
@@ -113,34 +191,10 @@ def aboutMe():
 
 
 
-def settings():
-    sg.theme('DarkPurple1')
-    layout = [  
-          
-          [sg.Text('Username', size =(15, 1))],
-          [sg.Input(name, key="name")],
-          [sg.HorizontalSeparator()],
-          [sg.Cancel()],
-          [sg.Button("Apply", key="-APPLY-"), sg.Button("Wipe", key="WIPE")]       
-    ]
-    window = sg.Window("Settings", layout, modal=True)
-    while True: 
-     event, values = window.read()
-     if event == sg.WIN_CLOSED:
-         break
-     if event == "Cancel":
-         window.close()
-         break
-     if event == "-APPLY-":
-         with open("name.txt", "w") as file:
-             file.write(values['name'])
-     if event == "WIPE":        
-         open("name.txt", "w").close() #deletes contents
-
 
 def main():
     welcomeMessage = "Welcome to the Hub! {} ".format(name)
-    menu_def = [['File',  ['Settings', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos']]]
+    menu_def = [['File',  ['Settings', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos', 'Search The Web!']]]
     SAVE_FILE = "text.txt"
     sg.theme('DarkPurple6')
     column = [  
@@ -188,6 +242,8 @@ def main():
          txtViewer()    
      if event == "ToDos":
          toDoList()   
+     if event == "Search The Web!":
+         search()    
      if event == "YOUTUBE":
          webbrowser.open("https://youtube.com")
      if event == "TWITTER":
