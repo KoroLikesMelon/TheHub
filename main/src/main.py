@@ -9,6 +9,40 @@ from randomFact import fact
 import time
 file =open("name.txt", "r")  
 name = file.read() 
+def toDoList():
+    file = open("todolist.txt", "r")
+    sg.theme('DarkPurple1')
+    todos = file.read()
+    column = [
+        [sg.Text("WIP!! You need to relaunch it to get a todo", font=("50"))],
+        [sg.Text("Enter a To Do", font=("50"))]
+    ]
+    layout = [
+        [sg.Text('', pad=(0,0),key='-EXPAND2-')],              # the thing that expands from left
+        [sg.Column(column, vertical_alignment='center', justification='center',  k='-C-')],
+        [sg.HorizontalSeparator()],
+        [sg.Input(key="ToDos")],
+        [sg.Text(todos)],
+        [sg.Button("Enter", key="ENTER"), sg.Button("Wipe", key="WIPE")],
+        [sg.Cancel()]
+    ]
+    window = sg.Window("To Do List", layout, size=(500,300))
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        if event == "Cancel":
+            window.close()
+            break
+        if event == "ENTER":
+            file.close()
+            with open("todolist.txt", "w") as file:
+                file.write(values["ToDos"])
+                file.close()
+        if event == "WIPE":
+            open("todolist.txt", "w").close()       
+                
+            
 def txtViewer():
     #sg.multiline read into by txt or smth like that
     sg.theme('DarkPurple1')
@@ -87,7 +121,7 @@ def settings():
           [sg.Input(name, key="name")],
           [sg.HorizontalSeparator()],
           [sg.Cancel()],
-          [sg.Button("Apply", key="-APPLY-")]       
+          [sg.Button("Apply", key="-APPLY-"), sg.Button("Wipe", key="WIPE")]       
     ]
     window = sg.Window("Settings", layout, modal=True)
     while True: 
@@ -100,11 +134,13 @@ def settings():
      if event == "-APPLY-":
          with open("name.txt", "w") as file:
              file.write(values['name'])
+     if event == "WIPE":        
+         open("name.txt", "w").close() #deletes contents
 
 
 def main():
     welcomeMessage = "Welcome to the Hub! {} ".format(name)
-    menu_def = [['File',  ['Settings', 'About Me', 'Random Facts', 'Text File Viewer']]]
+    menu_def = [['File',  ['Settings', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos']]]
     SAVE_FILE = "text.txt"
     sg.theme('DarkPurple6')
     column = [  
@@ -150,6 +186,8 @@ def main():
          randomFact()    
      if event == "Text File Viewer":
          txtViewer()    
+     if event == "ToDos":
+         toDoList()   
      if event == "YOUTUBE":
          webbrowser.open("https://youtube.com")
      if event == "TWITTER":
