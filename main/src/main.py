@@ -7,13 +7,24 @@ from datetime import date
 import webbrowser
 from randomFact import fact
 import time
+import getpass
+username = getpass.getuser()
 file =open("name.txt", "r")  
 name = file.read() 
 searchengine = "None"
 def settings():
+    with open("spotifypath.txt", "r") as file:
+      spotifypath = file.read()
+    with open("steampath.txt", "r") as file:
+        steampath = file.read()  
     sg.theme('DarkPurple1')
     centered = [
         [sg.Text("What is your preffered search engine?")]
+    ]
+    centered2 = [
+        [sg.Text("Enter the path to your exe's (leave empty to use default install directory)")]
+    
+    
     ]
     layout = [  
           
@@ -25,7 +36,14 @@ def settings():
           [sg.Text('', pad=(0,0),key='-EXPAND2-')],              # the thing that expands from left
           [sg.Column(centered, vertical_alignment='center', justification='center',  k='-C-')],
           [sg.HorizontalSeparator()],
-          [sg.Button("DuckDuckGo", key="DUCKDUCKGO"), sg.Button("Google", key="GOOGLE")]
+          [sg.Button("DuckDuckGo", key="DUCKDUCKGO"), sg.Button("Google", key="GOOGLE")],
+          [sg.Text('', pad=(0,0),key='-EXPAND3-')],              # the thing that expands from left
+          [sg.Column(centered2, vertical_alignment='center', justification='center',  k='-C2-')],
+          [sg.HorizontalSeparator()],
+          [sg.Text("Enter the path to steam.exe")],
+          [sg.Input(steampath, key="STEAMPATH")],
+          [sg.Text("Enter the path to spotify.exe")],
+          [sg.Input(spotifypath, key="SPOTIFYPATH")],
               
     ]
     window = sg.Window("Settings", layout, modal=True)
@@ -39,6 +57,10 @@ def settings():
      if event == "-APPLY-":
          with open("name.txt", "w") as file:
              file.write(values['name'])
+         with open("spotifypath.txt", "w") as file:
+             file.write(values["SPOTIFYPATH"])
+         with open("steampath.txt", "w") as file:
+             file.write(values["STEAMPATH"])        
      if event == "WIPE":        
          open("name.txt", "w").close() #deletes contents
      if event == "DUCKDUCKGO":
@@ -252,13 +274,25 @@ def main():
      if event == "TWITTER":
          webbrowser.open("https://twitter.com")
      if event == "SPOTIFY":
-         filepath = "C:\\Users\\gotst\\AppData\\Roaming\\Spotify\\Spotify.exe" # set your path to the exe here, also this should be the default install location for spotify
-         os.startfile(filepath)
+         file = open("spotifypath.txt", "r") 
+         readfile = file.read()
+         if not "" == readfile:
+             filepath = readfile
+             os.startfile(filepath)
+         else:
+             os.startfile("C:\\Users\\{}\\AppData\\Roaming\\Spotify\\Spotify.exe".format(username))    
      if event == "TWITCH":
          webbrowser.open("https://twitch.com")
+         
      if event == "STEAM":
-         filepath = "C:\Program Files (x86)\Steam\Steam.exe" # default install location for steam
-         os.startfile(filepath)
+         file = open("steampath.txt", "r") 
+         readfile = file.read()
+         if not "" == readfile:
+             filepath = readfile
+             os.startfile(filepath)
+         else:
+             os.startfile("C:\\Program Files (x86)\\Steam\\Steam.exe")       
+    
              
                          
     
