@@ -76,6 +76,9 @@ def search():
         readfile = file1.read()
         if event == sg.WIN_CLOSED:
             break
+        if event == "Cancel":
+            window.close()
+            break
         if event == "SEARCHBUTTON":
             if "google" in readfile:
                   search = values["SEARCH"]
