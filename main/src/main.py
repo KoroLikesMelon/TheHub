@@ -8,6 +8,8 @@ import webbrowser
 from randomFact import fact
 import time
 import getpass
+import os.path
+from os import path
 username = getpass.getuser()
 file =open("name.txt", "r")  
 name = file.read() 
@@ -16,7 +18,9 @@ def settings():
     with open("spotifypath.txt", "r") as file:
       spotifypath = file.read()
     with open("steampath.txt", "r") as file:
-        steampath = file.read()  
+        steampath = file.read()
+    with open("VSCODEPATH.txt", "r") as file:
+        VSCODEpath = file.read()       
     sg.theme('DarkPurple1')
     centered = [
         [sg.Text("What is your preffered search engine?")]
@@ -44,6 +48,8 @@ def settings():
           [sg.Input(steampath, key="STEAMPATH")],
           [sg.Text("Enter the path to spotify.exe")],
           [sg.Input(spotifypath, key="SPOTIFYPATH")],
+          [sg.Text("Enter the path to VSCODE.exe")],
+          [sg.Input(VSCODEpath, key="VSCODEPATH")]
               
     ]
     window = sg.Window("Settings", layout, modal=True)
@@ -60,9 +66,15 @@ def settings():
          with open("spotifypath.txt", "w") as file:
              file.write(values["SPOTIFYPATH"])
          with open("steampath.txt", "w") as file:
-             file.write(values["STEAMPATH"])        
+             file.write(values["STEAMPATH"])
+         with open("VSCODEPATH.txt", "w") as file:
+             file.write(values["VSCODEPATH"])            
      if event == "WIPE":        
          open("name.txt", "w").close() #deletes contents
+         open("searchengine.txt", "w").close()
+         open("spotifypath.txt", "w").close()
+         open("steampath.txt", "w").close()
+         open("VSCODEPATH.txt", "w").close()
      if event == "DUCKDUCKGO":
          with open("searchengine.txt", "w") as file:
              file.write("duckduckgo")
@@ -269,18 +281,38 @@ def main():
          toDoList()   
      if event == "Search The Web!":
          search()    
+     if event == "VSCODE":
+         file = open("VSCODEPATH.txt", "r")
+         readfile = file.read()
+         if not "" == readfile:
+            filepath = readfile
+            if not path.exists(filepath):
+                sg.PopupError("PATH {} DOES NOT EXIST".format(filepath))
+                break
+            os.startfile(filepath)
+         else:
+             os.startfile("C:\\Program Files\\Microsoft VS Code\\Code.exe")
      if event == "YOUTUBE":
          webbrowser.open("https://youtube.com")
      if event == "TWITTER":
          webbrowser.open("https://twitter.com")
      if event == "SPOTIFY":
+       
          file = open("spotifypath.txt", "r") 
          readfile = file.read()
          if not "" == readfile:
              filepath = readfile
+             if not path.exists(filepath):
+                 sg.PopupError("PATH {} DOES NOT EXIST".format(filepath))
+                 break
              os.startfile(filepath)
          else:
-             os.startfile("C:\\Users\\{}\\AppData\\Roaming\\Spotify\\Spotify.exe".format(username))    
+             if not path.exists(defaultstart):
+                 sg.PopupError("DEFAULT INSTALLATION DIRECTORY DOES NOT EXIST, PLEASE SET IT IN SETTINGS")
+                 break
+             os.startfile("C:\\Users\\{}\\AppData\\Roaming\\Spotify\\Spotify.exe".format(username))
+       
+       
      if event == "TWITCH":
          webbrowser.open("https://twitch.com")
          
@@ -289,9 +321,16 @@ def main():
          readfile = file.read()
          if not "" == readfile:
              filepath = readfile
+             if not path.exists(filepath):
+                 sg.PopupError("PATH {} DOES NOT EXIST".format(filepath))
+                 break
              os.startfile(filepath)
          else:
-             os.startfile("C:\\Program Files (x86)\\Steam\\Steam.exe")       
+             defaultstart = "C:\\Program Files (x86)\\Steam\\Steam.exe"
+             if not path.exists(defaultstart):
+                 sg.PopupError("DEFAULT INSTALLATION DIRECTORY DOES NOT EXIST, PLEASE SET IT IN SETTINGS")
+                 break
+             os.startfile(defaultstart)       
     
              
                          
