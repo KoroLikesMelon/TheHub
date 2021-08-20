@@ -5,21 +5,26 @@ import PySimpleGUI as sg
 from PySimpleGUI.PySimpleGUI import CUSTOM_MENUBAR_METADATA_MARKER, Multiline
 from datetime import date
 import webbrowser
-from randomFact import fact
+from randomFact import facta
 import time
 import getpass
 import os.path
 from os import path
+from AssignablePys.assignable1 import assignable1
+from AssignablePys.assignable2 import assignable2
+from AssignablePys.assignable3 import assignable3
+from AssignablePys.assignable4 import assignable4
+from AssignablePys.assignable5 import assignable5
 username = getpass.getuser()
-file =open("name.txt", "r")  
+file =open("userinfo//name.txt", "r")  
 name = file.read() 
 searchengine = "None"
 def settings():
-    with open("spotifypath.txt", "r") as file:
+    with open("userinfo//spotifypath.txt", "r") as file:
       spotifypath = file.read()
-    with open("steampath.txt", "r") as file:
+    with open("userinfo//steampath.txt", "r") as file:
         steampath = file.read()
-    with open("VSCODEPATH.txt", "r") as file:
+    with open("userinfo//VSCODEPATH.txt", "r") as file:
         VSCODEpath = file.read()       
     sg.theme('DarkPurple1')
     centered = [
@@ -61,30 +66,30 @@ def settings():
          window.close()
          break
      if event == "-APPLY-":
-         with open("name.txt", "w") as file:
+         with open("userinfo//name.txt", "w") as file:
              file.write(values['name'])
-         with open("spotifypath.txt", "w") as file:
+         with open("userinfo//spotifypath.txt", "w") as file:
              file.write(values["SPOTIFYPATH"])
-         with open("steampath.txt", "w") as file:
+         with open("userinfo//steampath.txt", "w") as file:
              file.write(values["STEAMPATH"])
-         with open("VSCODEPATH.txt", "w") as file:
+         with open("userinfo//VSCODEPATH.txt", "w") as file:
              file.write(values["VSCODEPATH"])            
      if event == "WIPE":        
-         open("name.txt", "w").close() #deletes contents
-         open("searchengine.txt", "w").close()
-         open("spotifypath.txt", "w").close()
-         open("steampath.txt", "w").close()
-         open("VSCODEPATH.txt", "w").close()
+         open("userinfo//name.txt", "w").close() #deletes contents
+         open("userinfo//searchengine.txt", "w").close()
+         open("userinfo//spotifypath.txt", "w").close()
+         open("userinfo//steampath.txt", "w").close()
+         open("userinfo//VSCODEPATH.txt", "w").close()
      if event == "DUCKDUCKGO":
-         with open("searchengine.txt", "w") as file:
+         with open("userinfo//searchengine.txt", "w") as file:
              file.write("duckduckgo")
              file.close()
      if event == "GOOGLE":
-         with open("searchengine.txt", "w") as file:
+         with open("userinfo//searchengine.txt", "w") as file:
              file.write("google")
              file.close()      
      if event == "FIREFOX":
-         with open("searchengine.txt", "w") as file:
+         with open("userinfo//searchengine.txt", "w") as file:
              file.write("firefox")
              file.close()
            
@@ -106,7 +111,7 @@ def search():
     window = sg.Window("Search", layout, size=(500,300))
     while True:
         event, values = window.read()
-        file1 = open("searchengine.txt", "r")
+        file1 = open("userinfo//searchengine.txt", "r")
         readfile = file1.read()
         if event == sg.WIN_CLOSED:
             break
@@ -119,13 +124,17 @@ def search():
                   webbrowser.open("https://www.google.com/search?client=google-b-d&q={}".format(search)) 
             if "duckduckgo" in readfile:
                   search = values["SEARCH"]
-                  webbrowser.open("https://duckduckgo.com/?q={}&t=hy&va=g&ia=web".format(search))            
+                  webbrowser.open("https://duckduckgo.com/?q={}&t=hy&va=g&ia=web".format(search))     
+            else:
+                search = values["SEARCH"]
+                webbrowser.open("https://www.google.com/search?client=google-b-d&q={}".format(search))
+                            
         if event == "WEBSEARCH":
             search = values["SEARCH"]    
             webbrowser.open("https://www.{}.com".format(search))
 
 def toDoList():
-    file = open("todolist.txt", "r")
+    file = open("userinfo//todolist.txt", "r")
     sg.theme('DarkPurple1')
     todos = file.read()
     column = [
@@ -155,7 +164,7 @@ def toDoList():
                 file.write(values["ToDos"])
                 file.close()
         if event == "WIPE":
-            open("todolist.txt", "w").close()       
+            open("userinfo//todolist.txt", "w").close()       
                 
             
 def txtViewer():
@@ -187,7 +196,7 @@ def randomFact():
 
     layout2 = [
         [sg.Text("Your random fact:")],
-        [sg.Text(fact)],
+        [sg.Text(facta)],
         [sg.Cancel()]
     ]
     layout = [
@@ -224,15 +233,77 @@ def aboutMe():
         if event == "TEXTLINK":
             webbrowser.open("https://github.com/KoroLikesMelon")
             #Implement github page later here
+column = [[sg.Text("Welcome to the button settings!, head on over to the menu to configure your buttons!", font=("50"))]]
+def buttonSettings():
+    sg.theme('DarkPurple1')
+    menu_def = [['Buttons',  ['Assignable1', 'Assignable2', 'Assignable3', 'Assignable4', 'Assignable5']]]
+    layout = [
+          [sg.Menu(menu_def, key='-MENU-')],
+          [sg.Text(key='-EXPAND-', font='ANY 1', pad=(0, 0))],  # the thing that expands from top
+          [sg.Text('', pad=(0,0),key='-EXPAND2-'),              # the thing that expands from left
+             sg.Column(column, vertical_alignment='center', justification='center',  k='-C-')],
+          [sg.Button("WIPE ALL", key="WIPE")]
+    ]
+    window = sg.Window("Button Settings", layout)
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        if event == "WIPE":
+            open("userinfo//Assignables//assign1.txt", "w").close()
+            open("userinfo//Assignables//assign2.txt", "w").close()
+            open("userinfo//Assignables//assign3.txt", "w").close()
+            open("userinfo//Assignables//assign4.txt", "w").close()
+            open("userinfo//Assignables//assign5.txt", "w").close()
+            open("userinfo//Assignables//path1.txt", "w").close()
+            open("userinfo//Assignables//path2.txt", "w").close()
+            open("userinfo//Assignables//path3.txt", "w").close()
+            open("userinfo//Assignables//path4.txt", "w").close()
+            open("userinfo//Assignables//path5.txt", "w").close()
+            open("userinfo//Assignables//name1.txt", "w").close()
+            open("userinfo//Assignables//name2.txt", "w").close()
+            open("userinfo//Assignables//name3.txt", "w").close()
+            open("userinfo//Assignables//name4.txt", "w").close()
+            open("userinfo//Assignables//name5.txt", "w").close()
+            
+            
+            
+        if event == 'Assignable1':
+            assignable1()
+        if event == "Assignable2":
+            assignable2()    
+        if event == "Assignable3":
+            assignable3()    
+        if event == "Assignable4":
+            assignable4()    
+        if event == "Assignable5":
+            assignable5()    
+            
 
+    
 
 
 
 
 def main():
+    with open("userinfo//Assignables//name5.txt", "r") as file:
+        name5 = file.read()
+        file.close()
+    with open("userinfo//Assignables//name4.txt", "r") as file:
+        name4 = file.read()
+        file.close()
+    with open("userinfo//Assignables//name3.txt", "r") as file:
+        name3 = file.read()
+        file.close()
+
+    with open("userinfo//Assignables//name2.txt", "r") as file:
+        name2 = file.read()
+        file.close()
+    with open("userinfo//Assignables//name1.txt", "r") as file:
+        name1 = file.read()
+        file.close()
     welcomeMessage = "Welcome to the Hub! {} ".format(name)
-    menu_def = [['File',  ['Settings', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos', 'Search The Web!']]]
-    SAVE_FILE = "text.txt"
+    menu_def = [['File',  ['Settings', 'Assignables', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos', 'Search The Web!']]]
     sg.theme('DarkPurple6')
     column = [  
           [sg.Text(welcomeMessage, font=("70"))]
@@ -249,6 +320,7 @@ def main():
         [sg.HorizontalSeparator()],
         [sg.Text("Welcome to the main screen, navigate into the settings to set your username!")],
         [sg.Text("Check the about me for additional information about the project")],
+        [sg.Text("The Assignable buttons can be customized for your preference, set them up in the AssignableSettings window")],
         [sg.Text("Tinker, and explore the application, add new elements to your liking, and most important of all, have fun!")],
         [sg.HorizontalSeparator()],
         [sg.Button("Youtube", key="YOUTUBE"),
@@ -256,13 +328,18 @@ def main():
         sg.Button("Spotify", key="SPOTIFY"),
         sg.Button("VSCODE", key="VSCODE"),
         sg.Button("Twitch", key="TWITCH"),
-        sg.Button("Steam",key="STEAM")],
+        sg.Button("Steam",key="STEAM"),
+        sg.Button(name1, key="ASSIGN1"),
+        sg.Button(name2, key="ASSIGN2"),
+        sg.Button(name3, key="ASSIGN3"),
+        sg.Button(name4, key="ASSIGN4"),
+        sg.Button(name5, key="ASSIGN5"),],
         [sg.HorizontalSeparator()],
         [sg.Text(date.today(),justification='center')],
         [sg.Cancel()]  
         ]
     sg.theme('DarkPurple6')
-    window = sg.Window("Main", layout, size=(650,300))
+    window = sg.Window("Main", layout, size=(815,300))
     while True: 
      event, values = window.read()
      if event == sg.WIN_CLOSED:
@@ -276,13 +353,59 @@ def main():
      if event == "Random Facts":
          randomFact()    
      if event == "Text File Viewer":
-         txtViewer()    
+         txtViewer()   
      if event == "ToDos":
          toDoList()   
      if event == "Search The Web!":
          search()    
+     if event == "Assignables":
+         buttonSettings()    
+     if event == "ASSIGN1":
+          with open("userinfo//Assignables//assign1.txt", "r") as file:
+                readfile = file.read()
+                if "Website" in readfile:
+                    filer = open("userinfo//Assignables//path1.txt", "r")
+                    webbrowser.open(filer.read())
+                elif "App" in readfile:
+                    os.startfile(filer.read())   
+     if event == "ASSIGN2":
+          with open("userinfo//Assignables//assign2.txt", "r") as file:
+                readfile = file.read()
+                if "Website" in readfile:
+                    filer = open("userinfo//Assignables//path2.txt", "r")
+                    webbrowser.open(filer.read())
+                elif "App" in readfile: # put file close
+                    os.startfile(filer.read())       
+     if event == "ASSIGN3":
+          filer = open("userinfo//Assignables//path3.txt", "r")
+          with open("userinfo//Assignables//assign3.txt", "r") as file:
+                readfile = file.read()
+                if "Website" in readfile:
+                    webbrowser.open(filer.read())
+                    filer.close()
+                elif "App" in readfile:
+                    os.startfile(filer.read())
+                    filer.close()                       
+     if event == "ASSIGN4":
+          filer = open("userinfo//Assignables//path4.txt", "r")
+          with open("userinfo//Assignables//assign4.txt", "r") as file:
+                readfile = file.read()
+                if "Website" in readfile:
+                    webbrowser.open(filer.read())
+                elif "App" in readfile:
+                    os.startfile(filer.read())  
+     if event == "ASSIGN5":
+          filer = open("userinfo//Assignables//path5.txt", "r")
+          with open("userinfo//Assignables//assign5.txt", "r") as file:
+                readfile = file.read()
+                if "Website" in readfile:
+                    webbrowser.open(filer.read())
+                elif "App" in readfile:
+                    os.startfile(filer.read())                                                     
+                           
+             
      if event == "VSCODE":
-         file = open("VSCODEPATH.txt", "r")
+         file = open("userinfo//VSCODEPATH.txt", "r")
          readfile = file.read()
          if not "" == readfile:
             filepath = readfile
@@ -298,7 +421,7 @@ def main():
          webbrowser.open("https://twitter.com")
      if event == "SPOTIFY":
        
-         file = open("spotifypath.txt", "r") 
+         file = open("userinfo//spotifypath.txt", "r") 
          readfile = file.read()
          if not "" == readfile:
              filepath = readfile
@@ -317,7 +440,7 @@ def main():
          webbrowser.open("https://twitch.com")
          
      if event == "STEAM":
-         file = open("steampath.txt", "r") 
+         file = open("userinfo//steampath.txt", "r") 
          readfile = file.read()
          if not "" == readfile:
              filepath = readfile
