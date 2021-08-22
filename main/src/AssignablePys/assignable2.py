@@ -1,5 +1,7 @@
 import PySimpleGUI as sg
 def assignable2():
+    with open("userinfo//Assignables//name1.txt", "r") as file:
+        name = file.read()
     sg.theme("DarkPurple1")
     with open("userinfo//Assignables//path2.txt", "r") as file:
        path = file.read()
@@ -13,7 +15,7 @@ def assignable2():
         [sg.Input(path, key="IN")],
         [sg.Button("Apply", key="APPLY")],
         [sg.Text("Enter a name for the button:")],
-        [sg.Input(key="NAME")]
+        [sg.Input(name, key="NAME")]
 
     ]
     window = sg.Window("Test", layout, size=(400,350))

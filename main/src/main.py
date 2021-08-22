@@ -10,11 +10,19 @@ import time
 import getpass
 import os.path
 from os import path
+from ctypes import cast, POINTER
+from comtypes import CLSCTX_ALL, defaultvalue
+from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
 from AssignablePys.assignable1 import assignable1
 from AssignablePys.assignable2 import assignable2
 from AssignablePys.assignable3 import assignable3
 from AssignablePys.assignable4 import assignable4
 from AssignablePys.assignable5 import assignable5
+from cpulevel import cpulevel
+devices = AudioUtilities.GetSpeakers()
+interface = devices.Activate(
+     IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
+volume = cast(interface, POINTER(IAudioEndpointVolume))
 username = getpass.getuser()
 file =open("userinfo//name.txt", "r")  
 name = file.read() 
@@ -95,7 +103,27 @@ def settings():
            
              
 
-
+def controlPanel():
+    menu_def = [['Tinker',  ['CPU LEVEL']]]
+    currentVolumeDb = volume.GetMasterVolumeLevel()
+    sg.theme('DarkPurple1')
+    layout = [
+        [sg.Menu(menu_def, key='-MENU-')],
+        [sg.Slider(orientation='vertical', default_value=currentVolumeDb, key="VOLUMESLIDER",change_submits=True, range=(1, 100))]
+    ]
+    window = sg.Window("Control Panel", layout, size=(300,150))
+    while True:
+        event, values = window.read()
+        if event == sg.WIN_CLOSED:
+            break
+        val = float(values["VOLUMESLIDER"]) * -1 / 1.9 
+        volume.SetMasterVolumeLevel(val, None) #51%
+        if event == "CPU LEVEL":
+            cpulevel()
+            
+            
+                
+                
 def search():
     sg.theme('DarkPurple1')
     column = [
@@ -303,7 +331,7 @@ def main():
         name1 = file.read()
         file.close()
     welcomeMessage = "Welcome to the Hub! {} ".format(name)
-    menu_def = [['File',  ['Settings', 'Assignables', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos', 'Search The Web!']]]
+    menu_def = [['File',  ['Settings', 'Assignables', 'About Me', 'Random Facts', 'Text File Viewer', 'ToDos', 'Search The Web!', 'Control Panel']]]
     sg.theme('DarkPurple6')
     column = [  
           [sg.Text(welcomeMessage, font=("70"))]
@@ -360,6 +388,8 @@ def main():
          search()    
      if event == "Assignables":
          buttonSettings()    
+     if event == "Control Panel":
+         controlPanel()    
      if event == "ASSIGN1":
           with open("userinfo//Assignables//assign1.txt", "r") as file:
                 readfile = file.read()
